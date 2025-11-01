@@ -1,5 +1,5 @@
 const express = require("express");
-const { fetchWeatherFromAPI, getCoordinats } = require("./fetch");
+const { fetchWeatherFromAPI, getCoordinates } = require("./fetch");
 
 const PORT = process.env.PORT || 3000;
 
