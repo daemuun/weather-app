@@ -2,9 +2,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 const API_KEY = process.env.API_KEY;
 
-async function fetchWeatherFromAPI(lat, lon) {
+async function fetchWeatherFromAPI(lat, lon, lang ='en') {
     try {
-        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`; // units=metric для °C
+        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=${lang}`;
 
         const response = await fetch(url);
         const data = await response.json();
@@ -28,7 +28,8 @@ async function fetchWeatherFromAPI(lat, lon) {
                 icon: item.weather[0].icon,
                 humidity: item.main.humidity
             })),
-            daily: getDailyForecast(data.list)
+            daily: getDailyForecast(data.list),
+            lang: lang
         };
 
         return weather;

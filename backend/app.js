@@ -17,17 +17,18 @@ const CACHE_LIFE_TIME = 10 * 60 * 1000;
 app.get('/api/weather/:city', async (req, res) => {
     try {
         const { city } = req.params;
+        const { lang } = req.query;
 
         const cacheKey = city.toLowerCase();
         const now = Date.now();
 
-        if (weatherCache[cacheKey] && (now - weatherCache[cacheKey].timestamp < CACHE_LIFE_TIME)) {
+        if (weatherCache[cacheKey] && (now - weatherCache[cacheKey].timestamp < CACHE_LIFE_TIME) && lang == weatherCache[cacheKey].lang) {
             console.log("Get city weather by cache");
             return res.json(weatherCache[cacheKey].data); 
         }
 
         const { lat, lon } = await getCoordinates(city);
-        const weatherData = await fetchWeatherFromAPI(lat, lon);
+        const weatherData = await fetchWeatherFromAPI(lat, lon, lang);
 
         weatherCache[cacheKey] = {
             data: weatherData,
