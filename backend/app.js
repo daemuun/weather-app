@@ -44,13 +44,13 @@ app.get('/api/weather/:city', async (req, res) => {
 
 app.get('/api/weather/coordinates', async (req, res) => {
     try {
-        const { lat, lon } = req.query;
+        const { lat, lon, lang='en' } = req.query;
 
         if (!lat || !lon) {
             return res.status(400).json({ error: 'Lat and lon parameters are required' });
         }
 
-        const weatherData = await fetchWeatherFromAPI(parseFloat(lat), parseFloat(lon));
+        const weatherData = await fetchWeatherFromAPI(parseFloat(lat), parseFloat(lon), lang);
 
         res.json(weatherData);
     } catch (e) {
