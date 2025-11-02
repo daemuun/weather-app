@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const API_KEY = process.env.API_KEY;
 
-async function fetchWeatherFromAPI(lat, lon, lang ='en') {
+async function fetchWeatherFromAPI(lat, lon, lang) {
     try {
         const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=${lang}`;
 

@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-app.use((req, res, next) => {
+app.use((_, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
@@ -17,14 +17,14 @@ const CACHE_LIFE_TIME = 10 * 60 * 1000;
 app.get('/api/weather/:city', async (req, res) => {
     try {
         const { city } = req.params;
-        const { lang } = req.query;
+        const { lang = 'en' } = req.query;
 
-        const cacheKey = city.toLowerCase();
+        const cacheKey = `${city.toLowerCase()}_${lang}`;
         const now = Date.now();
 
-        if (weatherCache[cacheKey] && (now - weatherCache[cacheKey].timestamp < CACHE_LIFE_TIME) && lang == weatherCache[cacheKey].lang) {
+        if (weatherCache[cacheKey] && (now - weatherCache[cacheKey].timestamp < CACHE_LIFE_TIME)) {
             console.log("Get city weather by cache");
-            return res.json(weatherCache[cacheKey].data); 
+            return res.json(weatherCache[cacheKey].data);
         }
 
         const { lat, lon } = await getCoordinates(city);
@@ -60,12 +60,21 @@ app.get('/api/weather/coordinates', async (req, res) => {
 });
 
 app.get('/api/health', (_, res) => {
-    res.json({ 
-        status: 'OK', 
+    res.json({
+        status: 'OK',
         timestamp: new Date().toISOString(),
         cacheSize: Object.keys(weatherCache).length
     });
 });
+
+setInterval(() => { 
+    const now = Date.now();
+    Object.keys(weatherCache).forEach( key => {
+        if (now - weatherCache[key].timestamp > CACHE_LIFE_TIME * 2) {
+            delete weatherCache[key]
+        }
+    });
+}, 60 * 60 * 3600);
 
 app.listen(PORT, () => {
     console.log(`server running on port: ${PORT}`);
