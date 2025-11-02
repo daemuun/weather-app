@@ -1,0 +1,19 @@
+{
+    "header": {
+        "input_placeholder": "Введите город",
+        "search_button": "Найти"
+    },
+    "weather": {
+        "feels_like": "Ощущается как",
+        "humidity": "Влажность",
+        "wind": "Ветер",
+        "pressure": "Давление",
+        "loading": "Загрузка...",
+        "forecast_title": "Прогноз на 5 дней"
+    },
+    "units": {
+        "temperature": "°C",
+        "speed": "м/с",
+        "pressure": "гПа"
+    }
+}

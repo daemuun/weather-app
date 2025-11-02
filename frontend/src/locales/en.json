@@ -1,0 +1,19 @@
+{
+    "header": {
+        "input_placeholder": "Enter city",
+        "search_button": "Search"
+    },
+    "weather": {
+        "feels_like": "Feels like",
+        "humidity": "Humidity",
+        "wind": "Wind",
+        "pressure": "Pressure",
+        "loading": "Loading...",
+        "forecast_title": "5-day forecast"
+    },
+    "units": {
+        "temperature": "°C",
+        "speed": "m/s",
+        "pressure": "hPa"
+    }
+}
