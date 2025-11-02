@@ -74,7 +74,10 @@ async function fetchWeather() {
     if (!city.value.trim()) return;
     
     try {
-        const url = `http://localhost:3000/api/weather/${city.value}?lang=${currentLang.value}`;
+        const baseUrl = window.location.hostname === 'localhost' 
+            ? '/api' 
+            : 'https://weather-app-0ulo.onrender.com/api'
+        const url = `${baseUrl}/weather/${city.value}?lang=${currentLang.value}`;
         const response = await fetch(url);
         const data = await response.json();
         weather.value = data;
