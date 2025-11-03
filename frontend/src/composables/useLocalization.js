@@ -4,6 +4,11 @@ import en from '@/locales/en.json'
 
 const locales = { ru, en }
 
+export const availableLocales = {
+    'en': 'English',
+    'ru': 'Русский'
+}
+
 export function useLocalization() {
     const currentLang = ref(localStorage.getItem('lang') ||
         (navigator.language.includes('ru') ? 'ru' : 'en')

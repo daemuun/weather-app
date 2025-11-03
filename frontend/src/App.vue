@@ -8,8 +8,9 @@
                 </button>
             </div>
             <select v-model="currentLang" @change="setLanguage(currentLang)">
-                <option value="ru">Русский</option>
-                <option value="en">English</option>
+                <option v-for="(name, code) in availableLocales" :key="code" :value="code">
+                    {{ name }}
+                </option>
             </select>
         </header>
 
@@ -17,18 +18,20 @@
             <div v-if="weather" class="weather-content">
                 <div class="current-weather">
                     <div class="weather-icon">
-                        <img :src="`https://openweathermap.org/img/wn/${weather.current.icon}@2x.png`" :alt="weather.current.description">
+                        <img :src="`https://openweathermap.org/img/wn/${weather.current.icon}@2x.png`"
+                            :alt="weather.current.description">
                     </div>
                     <div class="weather-info">
                         <h2>{{ weather.current.temperature }}{{ t('units.temperature') }}</h2>
-                        <p>{{ t('weather.feels_like') }}: {{ weather.current.feels_like }}{{ t('units.temperature') }}</p>
+                        <p>{{ t('weather.feels_like') }}: {{ weather.current.feels_like }}{{ t('units.temperature') }}
+                        </p>
                         <p>{{ weather.current.description }}</p>
                         <p>{{ t('weather.humidity') }}: {{ weather.current.humidity }}%</p>
                         <p>{{ t('weather.wind') }}: {{ weather.current.wind_speed }} {{ t('units.speed') }}</p>
                         <p>{{ t('weather.pressure') }}: {{ weather.current.pressure }} {{ t('units.pressure') }}</p>
                     </div>
                 </div>
-                
+
                 <div class="forecast">
                     <h3>{{ t('weather.forecast_title') }}:</h3>
                     <div class="daily-cards">
@@ -54,9 +57,8 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useLocalization } from '@/composables/useLocalization'
-
+import { ref, onMounted, watch } from 'vue';
+import { availableLocales, useLocalization } from '@/composables/useLocalization'
 const { t, currentLang, setLanguage } = useLocalization()
 
 const weather = ref(null)
@@ -64,18 +66,18 @@ let city = ref(localStorage.getItem("last-input") || "Москва");
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', { 
-        day: 'numeric', 
-        month: 'short' 
+    return date.toLocaleDateString(currentLang.value, {
+        day: 'numeric',
+        month: 'short'
     });
 }
 
 async function fetchWeather() {
     if (!city.value.trim()) return;
-    
+
     try {
-        const baseUrl = window.location.hostname === 'localhost' 
-            ? '/api' 
+        const baseUrl = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api'
             : 'https://weather-app-0ulo.onrender.com/api'
         const url = `${baseUrl}/weather/${city.value}?lang=${currentLang.value}`;
         const response = await fetch(url);
@@ -87,9 +89,14 @@ async function fetchWeather() {
     }
 }
 
+watch(currentLang, async () => {
+    fetchWeather();
+});
+
 onMounted(() => {
     fetchWeather();
 });
+
 </script>
 
 <style scoped>
