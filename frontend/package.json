@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write src/",
-    "deploy": "vite build && gh-pages -d dist"
+    "deploy": "vite build && gh-pages -d dist --dest ."
   },
   "dependencies": {
     "vue": "^3.5.22"
